@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light mode colors */
+  --background: 345 100% 97%; /* Lightest pink background */
+  --foreground: 345 80% 15%; /* Dark burgundy text */
+  --card: 345 100% 95%; /* Light pink for cards */
+  --card-foreground: 345 80% 20%; /* Dark burgundy for card text */
+  --popover: 345 100% 93%; /* Slightly darker pink for popovers */
+  --popover-foreground: 345 80% 25%; /* Dark burgundy for popover text */
+  --primary: 345 80% 30%; /* Dark burgundy for primary elements */
+  --primary-foreground: 345 100% 98%; /* Very light pink */
+  --secondary: 345 100% 90%; /* Light pink for secondary elements */
+  --secondary-foreground: 345 80% 35%; /* Medium burgundy */
+  --muted: 345 100% 92%; /* Muted pink */
+  --muted-foreground: 345 80% 40%; /* Lighter burgundy */
+  --accent: 345 80% 35%; /* Medium burgundy accent */
+  --accent-foreground: 345 100% 98%; /* Very light pink */
+}
+
+.dark {
+  /* Dark mode colors */
+  --background: 0 43% 7%; /* Darkest burgundy background (#1A0808) */
+  --foreground: 0 15% 95%; /* Very light pink, almost white */
+  --card: 0 50% 12%; /* Lighter burgundy for cards (#2D0F0F) */
+  --card-foreground: 0 15% 90%; /* Light pink text */
+  --popover: 0 56% 20%; /* Medium burgundy for popovers (#531717) */
+  --popover-foreground: 0 15% 95%; /* Very light pink text */
+  --primary: 0 60% 15%; /* Dark burgundy primary (#400F0F) */
+  --primary-foreground: 0 15% 100%; /* Pure white */
+  --secondary: 0 50% 15%; /* Medium-dark burgundy */
+  --secondary-foreground: 0 15% 90%; /* Light pink */
+  --muted: 0 50% 12%; /* Muted burgundy */
+  --muted-foreground: 0 15% 85%; /* Light pink */
+  --accent: 0 56% 25%; /* Brighter burgundy accent */
+  --accent-foreground: 0 15% 100%; /* Pure white */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+/* Custom utility classes */
+.bg-background { background-color: hsl(var(--background)); }
+.text-foreground { color: hsl(var(--foreground)); }
+.bg-card { background-color: hsl(var(--card)); }
+.text-card-foreground { color: hsl(var(--card-foreground)); }
+.bg-popover { background-color: hsl(var(--popover)); }
+.text-popover-foreground { color: hsl(var(--popover-foreground)); }
+.bg-primary { background-color: hsl(var(--primary)); }
+.text-primary { color: hsl(var(--primary)); }
+.text-primary-foreground { color: hsl(var(--primary-foreground)); }
+.bg-secondary { background-color: hsl(var(--secondary)); }
+.text-secondary { color: hsl(var(--secondary)); }
+.text-secondary-foreground { color: hsl(var(--secondary-foreground)); }
+.bg-muted { background-color: hsl(var(--muted)); }
+.text-muted-foreground { color: hsl(var(--muted-foreground)); }
+.bg-accent { background-color: hsl(var(--accent)); }
+.text-accent { color: hsl(var(--accent)); }
+.text-accent-foreground { color: hsl(var(--accent-foreground)); }
+
+/* Hover states */
+.hover\:bg-primary-foreground:hover { background-color: hsl(var(--primary-foreground)); }
+.hover\:text-primary:hover { color: hsl(var(--primary)); }
+.hover\:bg-secondary-foreground:hover { background-color: hsl(var(--secondary-foreground)); }
+.hover\:text-secondary:hover { color: hsl(var(--secondary)); }
+.hover\:bg-accent-foreground:hover { background-color: hsl(var(--accent-foreground)); }
+.hover\:text-accent:hover { color: hsl(var(--accent)); }
+.hover\:bg-card:hover { background-color: hsl(var(--card)); }
+.hover\:text-card-foreground:hover { color: hsl(var(--card-foreground)); }
+
+/* Transition utilities */
+.transition-colors {
+  transition-property: color, background-color, border-color;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
