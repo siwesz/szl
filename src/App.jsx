@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Routes, Route, useLocation, Link, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Link, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { PlusCircle, Search, MessageCircle, Bell, Sun, Moon, ChevronUp, ChevronDown, User, Users, SettingsIcon, ShoppingBag, Heart, LogOut, ThumbsUp, Send } from 'lucide-react';
+import { PlusCircle, Search, MessageCircle, Bell, Sun, Moon, ChevronUp, ChevronDown, User, Users, SettingsIcon, LogOut, ThumbsUp, Send } from 'lucide-react';
 import Settings from './components/Settings';
 import FindMyMatch from './components/FindMyMatch';
 import Shop from './components/Shop';
 import Wishlist from './components/Wishlist';
 import Checkout from './components/Checkout';
 import { useDarkMode } from './hooks/useDarkMode';
+import { useAuth } from './auth';
 import './index.css';
 import UserProfile from './components/UserProfile';
 import IntroQuiz from './components/IntroQuiz';
@@ -274,11 +275,19 @@ const App = () => {
   const { isDarkMode } = useDarkMode();
   const location = useLocation();
   const [isIndividualChatOpen, setIsIndividualChatOpen] = useState(false);
+  const { user } = useAuth();
+
+  if (!user && location.pathname !== '/signup' && location.pathname !== '/signin') {
+    return <Navigate to="/signup" replace />;
+  }
+
+  if (user && (location.pathname === '/signup' || location.pathname === '/signin')) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'dark' : ''} bg-background text-foreground transition-colors`}>
       {shouldShowNavigation(location.pathname, isIndividualChatOpen) && <Navigation />}
-
       <main className={`${isIndividualChatOpen ? 'h-screen' : 'max-w-3xl mx-auto py-6 px-4 sm:px-6 lg:px-8'}`}>
         {location.pathname === '/' && !isIndividualChatOpen && (
           <div className="mb-4 flex items-center">
@@ -290,23 +299,24 @@ const App = () => {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/intro-quiz" element={<IntroQuiz />} />
-          <Route path="/verification" element={<Verification />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/find-my-match" element={<FindMyMatch />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/profile/:id" element={<UserProfile />} />
-          <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/chat" element={<Chat onChatSelect={setIsIndividualChatOpen} />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/settings/blocked-users" element={<BlockedUsers />} />
-          <Route path="/settings/subscription" element={<Subscription />} />
-          <Route path="/settings/edit-profile" element={<EditProfile />} />
-          <Route path="/settings/manage-privacy" element={<ManagePrivacy />} />
-          <Route path="/settings/notifications" element={<NotificationSettings />} />
-          <Route path="/preview-profile" element={<PreviewProfile />} />
+          <Route path="/intro-quiz" element={user ? <IntroQuiz /> : <Navigate to="/signup" replace />} />
+          <Route path="/verification" element={user ? <Verification /> : <Navigate to="/signup" replace />} />
+          <Route path="/thank-you" element={user ? <ThankYou /> : <Navigate to="/signup" replace />} />
+          <Route path="/" element={user ? <Home /> : <Navigate to="/signup" replace />} />
+          <Route path="/find-my-match" element={user ? <FindMyMatch /> : <Navigate to="/signup" replace />} />
+          <Route path="/shop" element={user ? <Shop /> : <Navigate to="/signup" replace />} />
+          <Route path="/wishlist" element={user ? <Wishlist /> : <Navigate to="/signup" replace />} />
+          <Route path="/checkout" element={user ? <Checkout /> : <Navigate to="/signup" replace />} />
+          <Route path="/profile/:id" element={user ? <UserProfile /> : <Navigate to="/signup" replace />} />
+          <Route path="/chat" element={user ? <Chat onChatSelect={setIsIndividualChatOpen} /> : <Navigate to="/signup" replace />} />
+          <Route path="/settings" element={user ? <Settings /> : <Navigate to="/signup" replace />} />
+          <Route path="/settings/blocked-users" element={user ? <BlockedUsers /> : <Navigate to="/signup" replace />} />
+          <Route path="/settings/subscription" element={user ? <Subscription /> : <Navigate to="/signup" replace />} />
+          <Route path="/settings/edit-profile" element={user ? <EditProfile /> : <Navigate to="/signup" replace />} />
+          <Route path="/settings/manage-privacy" element={user ? <ManagePrivacy /> : <Navigate to="/signup" replace />} />
+          <Route path="/settings/notifications" element={user ? <NotificationSettings /> : <Navigate to="/signup" replace />} />
+          <Route path="/preview-profile" element={user ? <PreviewProfile /> : <Navigate to="/signup" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
@@ -314,4 +324,3 @@ const App = () => {
 };
 
 export default App;
-
