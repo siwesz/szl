@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Send, Users, ArrowLeft } from 'lucide-react';
 
@@ -19,15 +19,16 @@ const Chat = ({ onChatSelect }) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const messagesEndRef = React.useRef(null);
+  const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  React.useEffect(scrollToBottom, [mockMessages]);
+  useEffect(scrollToBottom, [mockMessages]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     onChatSelect(selectedChat !== null);
   }, [selectedChat, onChatSelect]);
 
@@ -40,6 +41,7 @@ const Chat = ({ onChatSelect }) => {
         console.log('Sending message:', message);
         setMessage('');
         setIsLoading(false);
+        scrollToBottom();
       }, 1000);
     }
   };
@@ -72,7 +74,7 @@ const Chat = ({ onChatSelect }) => {
           </div>
         </>
       ) : (
-        <>
+        <div className="flex flex-col h-full">
           <div className="bg-primary text-primary-foreground p-4 flex items-center">
             <button onClick={() => setSelectedChat(null)} className="mr-4">
               <ArrowLeft size={24} />
@@ -83,21 +85,21 @@ const Chat = ({ onChatSelect }) => {
               <User size={24} />
             </Link>
           </div>
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-4 space-y-4">
-              {mockMessages.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.senderId === 1 ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`max-w-[70%] p-3 rounded-lg ${msg.senderId === 1 ? 'bg-muted' : 'bg-accent text-accent-foreground'}`}>
-                    <p>{msg.content}</p>
-                    <span className="text-xs text-muted-foreground">{msg.timestamp}</span>
-                  </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 pb-32" ref={chatContainerRef}>
+            {mockMessages.map((msg) => (
+              <div key={msg.id} className={`flex ${msg.senderId === 1 ? 'justify-start' : 'justify-end'} mb-4`}>
+                <div className={`max-w-[70%] p-3 rounded-lg ${msg.senderId === 1 ? 'bg-muted' : 'bg-accent text-accent-foreground'}`}>
+                  <p>{msg.content}</p>
+                  <span className="text-xs text-muted-foreground">{msg.timestamp}</span>
                 </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
           </div>
-          <div className="bg-background p-4 border-t">
-            <form onSubmit={handleSendMessage} className="flex">
+
+          <div className="bg-background p-4 border-t fixed bottom-0 left-0 right-0 pb-8 md:pb-12 transform -translate-y-5">
+            <form onSubmit={handleSendMessage} className="flex max-w-3xl mx-auto">
               <input
                 type="text"
                 value={message}
@@ -109,12 +111,12 @@ const Chat = ({ onChatSelect }) => {
                 {isLoading ? (
                   <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div>
                 ) : (
-                  <Send size={18} className="sm:size-20" />
+                  <Send size={18} />
                 )}
               </button>
             </form>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
